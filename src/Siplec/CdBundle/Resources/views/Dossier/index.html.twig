@@ -1,0 +1,101 @@
+{% extends "SiplecCdBundle::layout.html.twig" %}
+
+{% block title %}
+{% if saisie %}Saisie dossier{% else %}Consultation dossier{% endif %}
+{% endblock title %}
+
+{% block content %}
+	{% if saisie %}
+    <h1>Saisie dossier</h1>
+    {{ form(form) }}
+	{% endif %}
+	<table id="liste"></table>
+	<div id="pagination"></div>
+{% endblock content %}
+    
+{% block javascripts %} 
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/sipleccd/css/ui.jqgrid.css') }}" media="all">
+<script src="{{ asset('bundles/sipleccd/js/grid.locale-fr.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/sipleccd/js/jquery.jqGrid.min.js') }}" type="text/javascript"></script>
+<script language="javascript">
+$(function() {
+	{% if saisie %}
+	$('#siplec_cdbundle_dossier_numDossier').formatter(format_num_dossier).focus();
+	{% endif %}
+	datePick = function(elem)
+	{
+	   jQuery(elem).datepicker({dateFormat:"dd/mm/yy",
+		    onClose: function(dateText, inst) { 
+			    // Selectionne le champs suivant pour aider à la saisie
+		    	$(this).parent().next().children('input').focus();
+		    }});
+	}
+	var lastsel;
+	jQuery("#liste").jqGrid({
+	   	caption: "{% if saisie %}Saisie des dossiers du {{ "now"|date("d/m/Y") }}{% else %}Liste des dossiers Adéquation{% endif %}",
+	   	url:'{{ path('dossier_ajax', {'saisie':saisieUrl}) }}',
+		editurl: "{{ path('dossier') }}",
+	   	pager: '#pagination',
+		datatype: "json",
+		height: 480,
+		autowidth:true,	
+	   	rowList:[20,50,100],
+	    viewrecords: true,
+	   	sortname: 'id',
+	    sortorder: "desc",
+	   	colNames:['N° dossier',
+	  		   	'Type dossier',
+	  		   	'Thématique',
+	  		   	'Date réception', 
+	  		   	'Acticall',
+	  		   	'Statut',
+	  		   	'Commentaire',
+	  		   	'Archive',
+	  		   	'Actions'],
+	   	colModel:[
+	   		{name:'numDossier',index:'numDossier', align:"center"},
+	   		{name:'typeDossier',index:'typeDossier', align:"center", stype: 'select', searchoptions:{ sopt:['eq'], value: ":;Nouveau:Nouveau;Complément:Complément" }},		
+	   		{name:'thematique',index:'thematique', align:"center", stype: 'select', searchoptions:{ sopt:['eq'], value: ":;{% for thematique in thematiques %}{{ thematique.id }}:{{ thematique }}{% if not loop.last %};{% endif %}{% endfor %}" }},		
+	   		{name:'dateReceptionAdequation',index:'dateReceptionAdequation', align:"center", width:"200", stype:'text', searchoptions:{dataInit:datePick, attr:{title:'Select Date'}}, search:true },	
+	   		{name:'acticall',index:'acticall', align:"center", sorttype:"int", formatter:'checkbox', editoptions:{value:'1:0'}, formatoptions:{disabled:true}, searchoptions:{value:'true:false'}, stype: 'select', searchoptions:{ sopt:['eq'], value: ":;1:Acticall;0:Non-acticall" }},
+	   		{name:'statut',index:'statut', align:"center", sorttype:"int", stype: 'select', searchoptions:{ sopt:['eq'], value: ":;{% for statut in statutDossier %}{{ statut.id }}:{{ statut }}{% if not loop.last %};{% endif %}{% endfor %}" }},
+	   		{name:'commentaire',index:'commentaire', width:"300", sortable:false},	
+	   		{name:'archive',index:'archive', align:"center"},
+			{name:'act',index:'act', width:75,sortable:false, search:false},	
+	   	],
+		onSelectRow: function(id){
+			if(id && id!==lastsel){
+				jQuery('#liste').jqGrid('restoreRow',lastsel);
+				jQuery('#liste').jqGrid('editRow',id,true);
+				lastsel=id;
+			}
+		},
+		gridComplete: function(){
+			var ids = jQuery("#liste").jqGrid('getDataIDs');
+			for(var i=0;i < ids.length;i++){
+				var cl = ids[i];
+				a=m=s="";
+				a = "<a href='{{ path('_welcome') }}dossier-"+cl+"'><span class='ui-icon ui-icon-search inline' title='Afficher'></span></a>"; 
+				{% if is_granted('ROLE_GEST_OPERATEUR') %}
+					m = "<a href='{{ path('_welcome') }}dossier-edition-"+cl+"'><span class='ui-icon ui-icon-pencil inline' title='Modifier'></span></a>"; 
+					s = "<a href='{{ path('_welcome') }}dossier-suppression-"+cl+"' onclick='return confirm(\"Voulez vous vraiment supprimer ce dossier ?\");'><span class='ui-icon ui-icon-trash inline'></span></a>";
+				{% endif %} 
+				jQuery("#liste").jqGrid('setRowData',ids[i],{act:a+m+s});
+			}	
+		}
+	});
+	// filtres de recherche
+	jQuery("#liste").filterToolbar();
+	{% if saisie == false %}
+	$("#liste").navGrid('#pagination',{edit:false,add:false,del:false,search:false}).navButtonAdd('#pagination',{
+		   caption:"Export des dossiers à traiter", 
+		   buttonicon:"ui-icon-document", 
+		   onClickButton: function(){ 
+			   location.href = '{{ path('dossier_export_a_traiter') }}';
+		   }, 
+		   position:"last"
+		});
+	{% endif %}
+});
+</script>
+{% endblock javascripts %}

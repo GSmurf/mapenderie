@@ -1,0 +1,27 @@
+{% extends "SiplecCdBundle::layout.html.twig" %}
+
+{% block title 'Connexion' %} 
+
+{% block content %}
+{% if error %}
+<div class="ui-widget w40 center">
+	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		<strong>Erreur :</strong> {{ error|trans({}, 'FOSUserBundle') }}</p>
+	</div>
+</div>
+{% endif %}
+<div class="txtcenter">
+<form action="{{ path("fos_user_security_check") }}" method="post">
+	<input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+	<ul>
+		<li><label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label> <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="Saisisez votre login" /></li>
+		<li><label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label> <input type="password" id="password" name="_password" required="required" placeholder="Saisisez votre mdp" /></li>
+		<li><input type="checkbox" id="remember_me" name="_remember_me" value="on" style="margin-left: 300px;"/> <label for="remember_me" style="text-align: left;">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label></li>
+		<li><button id="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false">
+				<span class="ui-button-icon-primary ui-icon ui-icon-person"></span><span class="ui-button-text">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</span>
+			</button></li>
+	</ul>
+</form>
+</div>
+{% endblock content %}

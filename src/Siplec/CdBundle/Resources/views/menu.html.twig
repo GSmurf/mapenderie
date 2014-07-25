@@ -1,0 +1,38 @@
+{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+<aside class="ma0" id="navigation">
+	<nav role="navigation">
+		<ul id="menu">
+			<li><a href="javascript:void();" title=""><span class="ui-icon ui-icon-script"></span>Menu</a>
+				<ul>
+					{% if is_granted('ROLE_SIPLEC') %}
+					<li><a href="{{ path('courrier_new') }}" title=""><span class="ui-icon ui-icon-pencil"></span>Saisie courriers</a></li>
+					<li><a href="{{ path('courrier') }}" title=""><span class="ui-icon ui-icon-mail-closed"></span>Consultation courriers</a></li>
+					{% endif %}
+					{% if is_granted('ROLE_OPERATEUR') %}
+					<li><a href="{{ path('dossier_new') }}" title=""><span class="ui-icon ui-icon-document"></span>Saisie dossiers</a></li>
+					<li><a href="{{ path('dossier') }}" title=""><span class="ui-icon ui-icon-folder-open"></span>Consultation dossiers</a></li>
+					<li><a href="{{ path('traitement') }}" title=""><span class="ui-icon ui-icon-clock"></span>Traitement opérateur</a></li>
+					<li><a href="{{ path('refus_auto') }}" title=""><span class="ui-icon ui-icon-close"></span>Refus automatique</a></li>
+					<li><a href="{{ path('reexpedition') }}" title=""><span class="ui-icon ui-icon-cart"></span>Réexpédition</a></li>
+					{% endif %}
+					{% if is_granted('ROLE_GEST_OPERATEUR') %}
+					<li><a href="javascript:void();" title=""><span class="ui-icon ui-icon-tag"></span>Statistiques</a>
+						<ul>
+							<li><a href="{{ path('_welcome') }}" title=""><span class="ui-icon ui-icon-tag"></span>Client</a></li>
+							<li><a href="{{ path('_welcome') }}" title=""><span class="ui-icon ui-icon-tag"></span>Interne Adéquation</a></li>
+						</ul>
+					</li>
+					{% endif %}
+					{% if is_granted('ROLE_ADMIN') %}
+					<li><a href="javascript:void();" title=""><span class="ui-icon ui-icon-gear"></span>Administration</a>
+						<ul>
+							<li><a href="{{ path('utilisateur') }}" title=""><span class="ui-icon ui-icon-person"></span>Utilisateurs</a></li>
+							<li><a href="{{ path('dossier_import') }}" title=""><span class="ui-icon ui-icon-arrowreturnthick-1-e"></span>Import dossiers et archive</a></li>
+						</ul>
+					</li>
+					{% endif %}
+				</ul></li>
+		</ul>
+	</nav>
+</aside>
+{% endif %}

@@ -1,0 +1,60 @@
+{% extends "SiplecCdBundle::layout.html.twig" %}
+
+{% block content %}
+<a href="{{ path('fos_user_registration_register') }}">Creer un Utilisateur</a>
+<table id="liste"></table>
+<div id="pagination"></div>
+{% endblock %}
+
+{% block title 'Consultation utilisateurs' %}
+    
+{% block javascripts %} 
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/sipleccd/css/ui.jqgrid.css') }}" media="all">
+<script src="{{ asset('bundles/sipleccd/js/grid.locale-fr.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/sipleccd/js/jquery.jqGrid.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/sipleccd/js/jquery.formatter.min.js') }}" type="text/javascript"></script>
+<script language="javascript">
+function pickdates(id){
+	// Applique le date picker pour les champs date
+	$("#"+id+"_dateReceptionSiplec","#liste").datepicker({dateFormat:"dd/mm/yy"});
+	$("#"+id+"_dateEnvoi","#liste").datepicker({dateFormat:"dd/mm/yy"});
+	$("#"+id+"_dateReception","#liste").datepicker({dateFormat:"dd/mm/yy"});
+
+	// Applique le format num de dossier pour ce champs
+	$("#"+id+"_numDossier","#liste").formatter(format_num_dossier);
+	$("#"+id+"_numEnvoi","#liste").formatter(format_num_envoi);
+}
+
+$(function() {
+	var lastsel;
+	$("#liste").jqGrid({
+	    caption:"Consultation utilisateurs",
+	   	url:'{{ path('utilisateur_ajax') }}',
+		editurl: "{{ path('utilisateur_update_ajax') }}",
+	   	rowNum:20,
+	   	rowList:[10,20,30],
+	   	pager: '#pagination',
+	   	sortname: 'id',
+	    viewrecords: true,
+	    sortorder: "desc",
+		datatype: "json",
+		height: 280,
+		autowidth:true,
+		colNames:[
+			'Utilisateur',
+			'Dernière connexion',
+			'Rôles',
+			'Actif'
+			],
+	   	colModel:[
+	   		{name:'username',index:'username', width:110, align:"center"},
+	   		{name:'last_login',index:'last_login', width:120, align:"center", sorttype:"date"},
+	   		{name:'roles',index:'roles', width:110, align:"center", editable:true, edittype:"select", editoptions:{value:"ROLE_ADMIN:administrateur;ROLE_SIPLEC:Siplec;ROLE_OPERATEUR:Operateur;ROLE_GEST_OPERATEUR:Gestionaire opérateur;ROLE_SUPER_ADMIN:super admin"}},	
+	   		{name:'enabled',index:'enabled', align:"center", formatter:'checkbox', editoptions:{value:'1:0'}, formatoptions:{disabled:true}},
+	   	]
+	});
+	$("#liste").jqGrid('navGrid','#pagination',{edit:false,add:false,del:false,search:false});
+	$("#liste").jqGrid('inlineNav',"#pagination",{edit:true,add:false,del:false,search:false});
+});
+</script>
+{% endblock %}

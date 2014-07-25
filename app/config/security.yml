@@ -1,0 +1,35 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+            logout:       true
+            anonymous:    true
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/dossier-import, role: ROLE_ADMIN }
+        - { path: ^/utilisateur, role: ROLE_ADMIN }
+        - { path: ^/dossier-edition, role: ROLE_GEST_OPERATEUR }
+        - { path: ^/dossier-modification, role: ROLE_GEST_OPERATEUR }
+        - { path: ^/dossier-suppression, role: ROLE_GEST_OPERATEUR }
+        - { path: ^/courrier, role: ROLE_SIPLEC }
+        - { path: ^/reexpedition, role: ROLE_OPERATEUR }
+        - { path: ^/refus-auto, role: ROLE_OPERATEUR }
+        - { path: ^/traitement, role: ROLE_OPERATEUR }
+        - { path: ^/dossier, role: ROLE_OPERATEUR }
+
+    role_hierarchy:
+        ROLE_GEST_OPERATEUR:  ROLE_OPERATEUR
+        ROLE_ADMIN:           [ROLE_SIPLEC, ROLE_OPERATEUR, ROLE_GEST_OPERATEUR, ROLE_ALLOWED_TO_SWITCH]

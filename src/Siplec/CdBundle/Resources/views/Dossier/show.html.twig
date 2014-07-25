@@ -1,0 +1,137 @@
+{% extends "SiplecCdBundle::layout.html.twig" %}
+
+{% block title dossier|capitalize %}
+
+{% block boutonsActions %}
+	<div id="boutonsActions">
+		<a href="{{ path('dossier') }}"><button class="boutonsActions-retour">Retour à la liste</button></a>
+		{% if is_granted('ROLE_GEST_OPERATEUR') %}
+			<a href="{{ path('dossier_edit', { 'id': dossier.id }) }}"><button class="boutonsActions-edit">Modification</button></a>
+			<a href="{{ path('dossier_delete', { 'id': dossier.id }) }}" onclick="return confirm('Voulez vous vraiment supprimer le {{ dossier }} ?');"><button class="boutonsActions-delete">Suppression</button></a>
+		{% endif %}
+	</div>
+{% endblock boutonsActions %}
+
+{% block javascripts %} 
+	<script language="javascript">
+	  // Mise en forme des boutons
+	  $( ".boutonsActions-retour" ).button({icons: {primary: "ui-icon-calculator"}});
+	  $( ".boutonsActions-edit" ).button({icons: {primary: "ui-icon-pencil"}});
+	  $( ".boutonsActions-delete" ).button({icons: {primary: "ui-icon-trash"}});
+	</script>
+{% endblock javascripts %}
+
+{% block content %}
+	<fieldset>
+		<legend>{{ dossier|capitalize  }}</legend>
+		<table class="record_properties">
+			<tbody>
+				<tr>
+					<th>Numéro de dossier</th>
+					<td>{{ dossier.numDossier }}</td>
+				</tr>
+				<tr>
+					<th>Type de dossier</th>
+					<td>{{ dossier.typeDossier }}</td>
+				</tr>
+				<tr>
+					<th>Statut</th>
+					<td>{{ dossier.statut }}</td>
+				</tr>
+				<tr>
+					<th>Thématique</th>
+					<td>{{ dossier.thematique }}</td>
+				</tr>
+				<tr>
+					<th>Saisie par</th>
+					<td>{{ dossier.utilisateurDossier }}</td>
+				</tr>
+				<tr>
+					<th>Date réception Adéquation</th>
+					<td>{{ dossier.dateReceptionAdequation|date('d/m/Y H:i') }}</td>
+				</tr>
+				<tr>
+					<th>Dossier parent</th>
+					<td>
+						{% if dossier.dossierPere %}<a href="{{ path('dossier_show', {id:dossier.dossierPere.getId}) }}">{{ dossier.dossierPere }}</a>&nbsp;{% endif %}
+						{% if dossier.archive and dossier.dossierPere %}({% endif %}{% if dossier.archive %}{{ dossier.archive }}{% endif %}{% if dossier.archive and dossier.dossierPere %}){% endif %}
+					</td>
+				</tr>
+				<tr>
+					<th>Commentaire</th>
+					<td>{{ dossier.commentaire }}</td>
+				</tr>
+				<tr>
+					<th>Référence recall</th>
+					<td>{{ dossier.refRecall }}</td>
+				</tr>
+				<tr>
+					<th>Date recall</th>
+					<td>{% if dossier.dateReexpedition %}{{ dossier.dateReexpedition|date('d/m/Y H:i') }}{% endif %}</td>
+				</tr>
+				<tr>
+					<th>Réexpédié par</th>
+					<td>{{ dossier.getUtilisateurReexpedition }}</td>
+				</tr>
+				<tr>
+					<th>Date de refus automatique</th>
+					<td>{% if dossier.dateRefus %}{{ dossier.dateRefus|date('d/m/Y H:i') }}{% endif %}</td>
+				</tr>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>Traitement</legend>
+		<table>
+			<tr>
+				<th>Date début traitement</th>
+				<td>{% if dossier.dateDebutTraitement %}{{ dossier.dateDebutTraitement|date('d/m/Y H:i:s') }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Date fin traitement</th>
+				<td>{% if dossier.dateFinTraitement %}{{ dossier.dateFinTraitement|date('d/m/Y H:i:s') }}{% endif %}{% if dossier.dureeTraitement %} (durée : {{ dossier.dureeTraitement|date('H:i:s') }}){% endif %}</td>
+			</tr>
+			<tr>
+				<th>Traité par</th>
+				<td>{{ dossier.getUtilisateur }}</td>
+			</tr>
+			<tr>
+				<th>Dossier Acticall</th>
+				<td>{% if dossier.acticall %}Oui{% else %}Non{% endif %}</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>Courrier</legend>
+		<table>
+			<tr>
+				<th>Date réception Siplec</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.dateReceptionSiplec|date('d/m/Y') }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Nom client</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.client }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Comentaire Siplec</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.commentaire }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Type de lettre</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.typeLettre }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Numéro d'envoi</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.numEnvoi }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Type d'envoi</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.typeEnvoi }}{% endif %}</td>
+			</tr>
+			<tr>
+				<th>Date d'envoi à Adéquation</th>
+				<td>{% if dossier.courrier %}{{ dossier.courrier.dateEnvoi|date('d/m/Y') }}{% endif %}</td>
+			</tr>
+		</table>
+	</fieldset>
+{% endblock %}
