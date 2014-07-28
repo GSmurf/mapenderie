@@ -1,6 +1,0 @@
-services:
-    siplec_user.registration.form.type:
-        class: Siplec\UserBundle\Form\Type\RegistrationFormType
-        arguments: [%fos_user.model.user.class%]
-        tags:
-            - { name: form.type, alias: siplec_user_registration }
