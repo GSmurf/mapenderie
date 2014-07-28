@@ -1,5 +1,5 @@
 # Application settings
-set :application,             "Siplec"
+set :application,             "maPenderie"
 set :domain,                  "domain.com"
 
 set :app_path,                "app"

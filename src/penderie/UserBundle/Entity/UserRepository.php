@@ -1,6 +1,5 @@
 <?php
-
-namespace Siplec\UserBundle\Entity;
+namespace Penderie\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

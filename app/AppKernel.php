@@ -16,8 +16,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Siplec\CdBundle\SiplecCdBundle(),
-            new Siplec\UserBundle\SiplecUserBundle(),
+            new Penderie\DefaultBundle\PenderieDefaultBundle(),
+            new Penderie\UserBundle\UserBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
         	new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         );

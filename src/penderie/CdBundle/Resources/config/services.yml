@@ -1,7 +1,0 @@
-parameters:
-#    siplec_cd.example.class: Siplec\CdBundle\Example
-
-services:
-#    siplec_cd.example:
-#        class: %siplec_cd.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

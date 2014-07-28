@@ -1,19 +1,13 @@
 _welcome:
     pattern:  /
-    defaults: { _controller: SiplecCdBundle:Default:connexion }
-#_welcome:
-#    pattern:  /
-#    defaults:
-#        _controller: FrameworkBundle:Redirect:urlRedirect
-#        path: /login
-#        permanent: true
-    
+    defaults: { _controller: PenderieDefaultBundle:Default:connexion }
+
 # importe les routes d'un répertoire Controller
-siplec_cd:
-    resource: "@SiplecCdBundle/Controller"
+penderie_cd:
+    resource: "@PenderieDefaultBundle/Controller"
     type:     annotation
-siplec_user:
-    resource: "@SiplecUserBundle/Controller"
+penderie_user:
+    resource: "@UserBundle/Controller"
     type:     annotation
     
 # configuration de FOSUserBundle

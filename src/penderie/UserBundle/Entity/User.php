@@ -1,5 +1,5 @@
 <?php
-namespace Siplec\UserBundle\Entity;
+namespace Penderie\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Utilisateur")
- * @ORM\Entity(repositoryClass="Siplec\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="Penderie\UserBundle\Entity\UserRepository")
  */
 class User extends BaseUser
 {

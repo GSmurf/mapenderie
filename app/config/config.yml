@@ -74,13 +74,11 @@ swiftmailer:
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: Siplec\UserBundle\Entity\User
-#    registration:
-#        form:
-#            type: siplec_user_registration
+    user_class: Penderie\UserBundle\Entity\User
+
 services:
-    kernel.listener.siplec_exception_listener:
-        class: Siplec\CdBundle\Listener\SiplecExceptionListener
+    kernel.listener.exception_listener:
+        class: Penderie\DefaultBundle\Listener\ExceptionListener
         scope: request
         arguments: ['@router', '@request']
         tags:
